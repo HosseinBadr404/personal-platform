@@ -99,3 +99,60 @@ jobs:
 
       - name: Publish deploy branch
         run: git push --force origin deploy-api
+
+
+  publish-web-source:
+    name: Publish Web deploy source
+    needs: [backend, frontend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout full repository history
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Install pnpm
+        run: npm install --global pnpm@11.25.0
+
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create Web-only deploy branch
+        run: |
+          git branch -D deploy-web 2>/dev/null || true
+          git subtree split --prefix=apps/web -b deploy-web
+          git switch deploy-web
+
+      - name: Add deployment pnpm configuration
+        run: |
+          cat > pnpm-workspace.yaml <<'EOF'
+          packages:
+            - '.'
+
+          allowBuilds:
+            unrs-resolver: true
+          EOF
+
+      - name: Generate standalone pnpm lockfile
+        run: pnpm install --lockfile-only
+
+      - name: Commit deployment metadata
+        run: |
+          git add pnpm-lock.yaml pnpm-workspace.yaml
+          git commit -m "chore: prepare web deploy source" || true
+
+      - name: Publish deploy branch
+        run: git push --force origin deploy-web
