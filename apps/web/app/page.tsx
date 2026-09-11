@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getProjects, type Project } from '@/lib/projects';
 
 export const dynamic = 'force-dynamic';
@@ -26,7 +27,7 @@ export default async function HomePage() {
       <section>
         <div className="section-title">
           <h2>Projects</h2>
-          <a className="button secondary" href="/admin/login">Admin</a>
+          <Link className="button secondary" href="/admin/login">Admin</Link>
         </div>
 
         {error ? (
