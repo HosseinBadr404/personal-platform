@@ -21,6 +21,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health", "/api/auth/csrf", "/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
