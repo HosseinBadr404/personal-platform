@@ -31,7 +31,8 @@ export default function NewProjectPage() {
     setSubmitting(true);
     setMessage(null);
 
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const payload = {
       title: form.get('title'),
       shortDescription: form.get('shortDescription'),
@@ -63,7 +64,7 @@ export default function NewProjectPage() {
         throw new Error(error?.message ?? 'Could not create project.');
       }
 
-      event.currentTarget.reset();
+      formElement.reset();
       setMessage('Project created as DRAFT.');
     } catch (reason) {
       setMessage(reason instanceof Error ? reason.message : 'Unknown error');
