@@ -1,0 +1,10 @@
+.DS_Store
+.env
+.env.local
+.idea/
+*.iml
+apps/api/target/
+node_modules/
+.pnpm-store/
+apps/web/.next/
+*.log

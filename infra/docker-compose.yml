@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: personal-platform-postgres
+    environment:
+      POSTGRES_DB: personal_platform
+      POSTGRES_USER: personal
+      POSTGRES_PASSWORD: personal
+    ports:
+      - "5432:5432"
+    volumes:
+      - personal-platform-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U personal -d personal_platform"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  personal-platform-postgres-data:
