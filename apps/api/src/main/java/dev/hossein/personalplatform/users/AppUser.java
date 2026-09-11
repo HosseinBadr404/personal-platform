@@ -48,6 +48,10 @@ public class AppUser {
         return value.trim();
     }
 
+    public void rotatePasswordHash(String passwordHash) {
+        this.passwordHash = requireText(passwordHash, "Password hash is required");
+    }
+
     public UUID getId() { return id; }
     public String getEmail() { return email; }
     public String getPasswordHash() { return passwordHash; }
